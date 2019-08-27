@@ -9,6 +9,7 @@
 
 3.vue.config.js 和 .editorconfig
 
+4.将项目的模块划分：tabbar -> 路由映射关系
 
 
 

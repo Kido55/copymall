@@ -13,7 +13,7 @@ export default {
     path:String,
     activeColor: {  //把activeColor的属性设定为一个字符串，方便后面使用，设置样式的颜色
       type:String,
-      default: 'red'  //默认是为红色，可自由修改
+      default: 'pink'  //默认是为红色，可自由修改
     }
   },
   data() {
