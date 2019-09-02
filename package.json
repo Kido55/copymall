@@ -8,14 +8,18 @@
   },
   "dependencies": {
     "axios": "^0.19.0",
+    "better-scroll": "^1.15.2",
     "core-js": "^2.6.5",
+    "jquery": "^3.4.1",
     "vue": "^2.6.10",
     "vue-router": "^3.1.2"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.10.0",
     "@vue/cli-service": "^3.10.0",
-    "vue-template-compiler": "^2.6.10"
+    "html-webpack-plugin": "^3.2.0",
+    "vue-template-compiler": "^2.6.10",
+    "webpack-dev-server": "^3.8.0"
   },
   "postcss": {
     "plugins": {
@@ -25,5 +29,18 @@
   "browserslist": [
     "> 1%",
     "last 2 versions"
-  ]
+  ],
+  "description": "```git remote add origin https://github.com/Kido55/copymall.git``` ```git push -u origin master```",
+  "main": "babel.config.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kido55/copymall.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Kido55/copymall/issues"
+  },
+  "homepage": "https://github.com/Kido55/copymall#readme"
 }

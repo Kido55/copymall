@@ -1,8 +1,19 @@
 import {request} from './request';
 
+// 请求多个数据
 export function getHomeMultidata() {
   return request({
     url: '/api/v1/home/multidata'
+  })
+}
+// 获取商品数据
+export function getHomeGoods(type,page) {
+  return request({
+    url: '/api/v1/home/data',
+    params: {   //子元素往父元素传值
+      type,   //种类
+      page    //页码
+    }
   })
 }
 

@@ -7,10 +7,8 @@
     <!-- 指示器 -->
     <slot name="indicator">
     </slot>
-
-
     <div class="indicator">
-      <slot name="indicator" v-if="showIndicator && sliderCount>1">
+      <slot name="indicator" v-if="showIndicator && slideCount>1">
         <div v-for="(item, index) in slideCount" class="indi-item" :class="{active: index === currentIndex-1}" :key="index"></div>
       </slot>
     </div>
@@ -22,19 +20,19 @@ import { setTimeout } from 'timers';
 export default {
   name: 'Swiper',
   props: {
-    interval: {
+    interval: {   //图片轮播时间间隔
       type: Number,
       default: 3000
     },
-    animDuration: {
+    animDuration: {   //延迟轮播开始的时间
       type: Number,
       default: 300
     },
-    moveRatio: {
+    moveRatio: {  //拖动图片的移动比例
       type: Number,
       default: 0.25
     },
-    showIndicator: {
+    showIndicator: {  //默认显示指示器
       type:Boolean,
       default: true
     }
@@ -49,7 +47,7 @@ export default {
     }
   },
   mounted: function() {
-    //1.操作DOM，在前后添加slide
+    //1.操作DOM，在前后添加slide，设置定时器
     setTimeout(() => {
       this.handleDom();
 
@@ -58,13 +56,15 @@ export default {
     },100)
   },
   methods: {
-    // 定时器操作
+    //定时器操作
+    // 开始定时器
     startTimer: function () {
       this.playTimer = window.setInterval(() => {
         this.currentIndex++;
         this.scrollContent(-this.currentIndex * this.totalWidth);
       },this.interval)
     },
+    // 停止定时器
     stopTimer: function() {
       window.clearInterval(this.playTimer);
     },
@@ -74,7 +74,7 @@ export default {
       this.scrolling = true;
 
       // 1.开始滚动动画
-      this.swiperStyle.transition = 'transform' + this.animDuration + 'ms';
+      this.swiperStyle.transition = 'transform ' + this.animDuration + 'ms';   //过度属性，PS：'transform '这里要加空格，不然会导致动画没有滑动的bug
       this.setTransform(currentPosition);
 
       // 2.判断滚动到的位置
@@ -105,22 +105,29 @@ export default {
       this.swiperStyle['-webkit-transform'] = `translate3d(${position}px),0,0`;
       this.swiperStyle['-ms-transform'] = `translate3d(${position}px),0,0`;
     },
-    // 操作DOM，在DOM前后添加slide
+
+    // A.操作DOM，在DOM前后添加slide
     handleDom: function() {
       // 1.获取要操作的元素
-      let swiperEl = document.querySelector('.swiper');
-      let slidesEls = swiperEl.getElementsByClassName('slide');
+      let swiperEl = document.querySelector('.swiper'); //ul
+      let slidesEls = swiperEl.getElementsByClassName('slide'); //li
 
-      // 2.保存个数
+      // 2.保存元素个数
       this.slideCount = slidesEls.length;
 
-      // 3.如果大于1个，那么在前后分别添加一个slide
+      // 3.如果元素个数大于1，那么在前后分别添加一个slide
       if (this.slideCount >1 ) {
+        //复制第一张
         let cloneFirst = slidesEls[0].cloneNode(true);
+        //复制最后一张
         let cloneLast = slidesEls[this.slideCount - 1].cloneNode(true);
+        //把复制的最后一张插入到ul中，放到首位
         swiperEl.insertBefore(cloneLast, slidesEls[0]);
+        //把复制的第一张插入到ul中，放到末位
         swiperEl.appendChild(cloneFirst);
+        //.swiper的总宽度
         this.totalWidth = swiperEl.offsetWidth;
+        //.swiper的样式
         this.swiperStyle = swiperEl.style;
       }
       // 4.让swiper元素，显示第一个（目前是显示前面添加的最后一个元素）
@@ -133,7 +140,7 @@ export default {
       if(this.scrolling) return;
       // 2.停止定时器
       this.stopTimer();
-      // 3.保存开始滚动的位置
+      // 3.保存开始拖动的位置
       this.startX = e.touches[0].pageX;
     },
 
@@ -173,6 +180,7 @@ export default {
     next: function() {
       this.changeItem(1);
     },
+    //自动开始轮播
     changeItem: function(num) {
       // 1.移除定时器
       this.stopTimer();
