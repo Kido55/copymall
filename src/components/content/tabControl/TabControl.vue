@@ -12,14 +12,14 @@ export default {
   props: {
     titles: {
       type: Array,
-      default() {
+      default() {   //当默认值是对象或者数组的时候，default需要是函数
         return []
       }
     }
   },
   data() {
     return {
-      currentIndex: 0
+      currentIndex: 0   //当前title的索引，上拉加载更多loadMore，需要根据当前索引进行加载
     }
   },
   methods: {

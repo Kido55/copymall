@@ -1,6 +1,9 @@
 <template>
-  <div id="app">
-    <router-view></router-view>
+  <div id="app" class="wrapper">
+    <!-- 除去Detail组件，不被keepalive -->
+    <keep-alive exclude="Detail">  
+      <router-view/>
+    </keep-alive>
     <main-tab-bar/>
   </div>
 </template>

@@ -1,6 +1,6 @@
 <template>
   <div class="back-top">
-    <img src="../../../assets/images/common/top.png" alt />
+    <img src="@/assets/images/common/top.png" alt />
   </div>
 </template>
 

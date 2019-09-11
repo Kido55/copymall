@@ -12,7 +12,7 @@ export default {
   components: {
     GoodsListItem
   },
-  props: {  
+  props: {  //父组件向子组件传值
     goods: {
       type: Array,
       default() {
