@@ -25,7 +25,7 @@
       <tab-control :titles="['流行','新款','精选']" @tabClick="tabClick" ref="tabControl2" />
       <good-list :goods="showGoods" />
     </scroll>
-    <back-top class="backtop" @click.native="topClick" v-show="showTopClick" />
+    <back-top class="back-top" @click.native="topClick" v-show="showTopClick" />
   </div>
 </template>
 
@@ -38,10 +38,10 @@ import NavBar from "components/common/navbar/NavBar";
 import TabControl from "components/content/tabControl/TabControl";
 import GoodList from "components/content/goods/GoodsList";
 import Scroll from "components/common/scroll/Scroll";
-import BackTop from "components/content/backTop/BackTop";
 
 import { getHomeMultidata, getHomeGoods } from "network/home";
 import { debounce } from "common/utils";
+import {itemListenerMixin, backTopMixin} from "common/mixin";
 import { log } from 'util';
 
 export default {
@@ -54,8 +54,8 @@ export default {
     TabControl,
     GoodList,
     Scroll,
-    BackTop
   },
+  mixins: [itemListenerMixin, backTopMixin],
   data() {
     return {
       banners: [],
@@ -66,10 +66,9 @@ export default {
         sell: { page: 0, list: [] }
       },
       currentType: "pop",
-      showTopClick: false,
       tabOffsetTop: 0,
       isTabFixed: false,
-      saveY: 0
+      saveY: 0,
     };
   },
   computed: {
@@ -79,7 +78,8 @@ export default {
     }
   },
   destroyed() {   //调用这个函数(具体可以看看vue的的生命周期)，我们常用来销毁一些监听事件及定时函数
-    console.log('home');
+    // console.log('home');
+    this.$bus.$off('itemImageLoad', this.itemImgListener)
   },
   activated() {   //回到home页面时，依然回到离开前的滚动的位置
     this.$refs.scroll.refresh()   //不添加这行代码，可能会出现换页回到home时候，自动滑回到顶部 
@@ -87,8 +87,10 @@ export default {
        
   },
   deactivated() {   //离开home页面时，获得当时滚动的位置saveY的值
+  // 1.保存Y值
     this.saveY = this.$refs.scroll.getScrollY()
-    console.log(this.saveY);    
+    // 2.取消全局事件的监听
+    this.$bus.$off('itemImgLoad',this.itemImgListener)
 },
   created() {
     // 1.请求多个数据
@@ -100,11 +102,7 @@ export default {
   },
   mounted() {
     // 图片加载完成的事件监听
-    //声明一下变量refresh，为debounce函数的调用
-    const refresh = debounce(this.$refs.scroll.refresh, 50);
-    this.$bus.$on("itemImageLoad", () => {
-      refresh();
-    });
+    //声明一下变量refresh，为debounce函数的调用,进行防抖动
   },
   methods: {
     /**
@@ -125,14 +123,12 @@ export default {
       this.$refs.tabControl1.currentIndex = index;
       this.$refs.tabControl2.currentIndex = index;
     },
-    topClick() {
-      this.$refs.scroll.scrollTo(0, 0);
-    },
     contentScroll(position) {
       // 判断TopClick是否显示
-      this.showTopClick = -position.y > 1000;
+      const positionY = -position.y;
+      this.showTopClick = positionY > 1000;
       // 决定tabControl是否吸顶（position：fixed）
-      this.isTabFixed = -position.y > this.tabOffsetTop;  //等于这个值时，isTabFixed变为true，tab-control显示出来
+      this.isTabFixed = positionY > this.tabOffsetTop;  //等于这个值时，isTabFixed变为true，tab-control显示出来
     },
     loadMore() {
       this.getHomeGoods(this.currentType);

@@ -11,7 +11,7 @@ export default {
 </script>
 
 <style scoped>
-.backtop {
+.back-top {
   position: fixed;
   right: 10px;
   bottom: 50px;

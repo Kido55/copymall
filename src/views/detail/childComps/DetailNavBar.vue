@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="nav-bar">
     <nav-bar>
       <div slot="left" class="back" @click="backClick">
         <img src="~assets/images/common/back.svg" alt="">
@@ -35,22 +35,30 @@ export default {
   methods: {
     titleClick(index) {
       this.currentIndex = index;
+      this.$emit('titleClick', index)
     },
     backClick() {
-      this.$router.back()
+      this.$router.go(-1)
     }
   }
 };
 </script>
 
 <style scoped>
+.nav-bar {
+  position: relative;
+  z-index: 9;
+  background-color: #fff;
+}
+
 .back img{
-  margin-top: 12px;
+  margin-top: 10px;
 }
 
 .title {
   display: flex;
   font-size: 16px;
+  padding: 0 10px;
 }
 
 .title-item {
