@@ -14,6 +14,7 @@
     </scroll>
     <detail-bottom-bar @addCart="addToCart"/>
     <back-top class="back-top" @click.native="topClick" v-show="showTopClick"/>
+    <!-- <toast :message="toastMessage" :show="show"/> -->
   </div>
 </template>
 
@@ -29,6 +30,7 @@ import DetailBottomBar from "./childComps/DetailBottomBar"
 
 import Scroll from "components/common/scroll/Scroll";
 import GoodsList from "components/content/goods/GoodsList";
+// import Toast from "components/common/toast/Toast"
 
 import {
   getDetail,
@@ -39,6 +41,7 @@ import {
 } from "network/detail";
 import { debounce } from "common/utils";
 import { itemListenerMixin, backTopMixin } from "common/mixin";
+import { mapActions } from 'vuex'
 import { log } from "util";
 
 export default {
@@ -54,6 +57,7 @@ export default {
     DetailBottomBar,
     GoodsList,
     Scroll,
+    // Toast
   },
   mixins: [itemListenerMixin, backTopMixin],
   data() {
@@ -68,7 +72,9 @@ export default {
       recommends: [],
       themeTop: [],
       getThemeTop: null,
-      currentIndex: 0
+      currentIndex: 0,
+      // toastMessage: '',
+      // show: false
     };
   },
   created() {
@@ -137,6 +143,7 @@ export default {
     // mixin.js封装起来
   },
   methods: {
+    ...mapActions(['addCart']),
     imageLoad() {
       // 页面加载完所有图片后，刷新一次页面
       this.$refs.scroll.refresh();
@@ -178,9 +185,25 @@ export default {
       product.price = this.goods.realPrice;
       product.iid = this.iid;
       // console.log(product);
-      // 2.将商品添加到购物车里
+      // 2.将商品添加到购物车里（方法1：Promise, 方法2：mapActions）
       // this.$store.commit('addCart', product)  //mutations
-      this.$store.dispatch('addCart', product)
+      this.addCart(product).then(res => {
+        this.$toast.show(res, 2000)
+        // console.log(this.$toast);
+        
+      })
+      // this.$store.dispatch('addCart', product).then(res => {
+        // this.show = true
+        // this.toastMessage = res
+
+        // setTimeout(() => {
+        //   this.show = false
+        //   this.toastMessage = ''
+        // }, 1500)
+      //   this.$toast.show(res, 2000)
+      // })
+      // 3.添加购物车成功
+
     }
   },
   destroyed() {

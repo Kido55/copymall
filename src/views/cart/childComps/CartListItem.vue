@@ -2,6 +2,7 @@
   <div id="cart-item">
     <div class="item-selector">
       <CheckButton :is-checked="itemInfo.checked" @click.native="checkClick"/>
+      <!-- 在组件上绑定事件，click后面需要加.native，否则不能监听触发事件 -->
     </div>
     <div class="item-img">
       <img :src="itemInfo.image" alt="商品图片">
