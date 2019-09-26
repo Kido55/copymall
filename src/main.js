@@ -6,6 +6,7 @@ import toast from 'components/common/toast'
 import FastClick from 'fastclick'
 import VueLazyload from 'vue-lazyload'
 
+
 Vue.config.productionTip = false
 
 // 添加事件总线对象
